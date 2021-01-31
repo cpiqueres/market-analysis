@@ -1,4 +1,7 @@
 import requests
+import json
+import pandas as pd
+from matplotlib import pyplot as plt
 
 # read the api-key
 f = open('api-key.txt','r')
@@ -10,7 +13,7 @@ params = {'access_key':key}
 # call the ccy end-point
 #print(params)
 #url= "http://api.marketstack.com/v1/currencies"
-#r = requests.get("http://api.marketstack.com/v1/currencies?access_key=43f4225b52ef3fad61c9154d43a07fdc")
+#r = requests.get("http://api.marketstack.com/v1/currencies?access_key=xxxxxx")
 #r = requests.get(url,params)
 
 # call the ccy for tickers
@@ -24,12 +27,18 @@ def tickers():
     print(r.text)
 
 def eod(symbol):
-    params = {'symbols':symbol, 'exchange':'BMEX'}
+    params = {
+                'symbols':symbol, 
+                'exchange':'BMEX',
+                'date_from':'2021-01-01',
+                'date_to':'2021-01-31'}
     # add the key
     params['access_key'] = key
-    url = 'http://api.marketstack.com/v1/eod/latest'
+    url = 'http://api.marketstack.com/v1/eod'
     r = requests.get(url,params)
-    print(r.text)
+    data = json.loads(r.text)
+    df = pd.DataFrame(data['data'])
+    print(df)
 
 if __name__ == "__main__":
        #tickers()
